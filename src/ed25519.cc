@@ -35,8 +35,8 @@ NAN_METHOD(MakeKeypair) {
 	crypto_sign_keypair(publicKeyData, privateKeyData);
 
 	Local<Object> result = Nan::New<Object>();
-	result->Set(Nan::New("publicKey").ToLocalChecked(), publicKey);
-	result->Set(Nan::New("privateKey").ToLocalChecked(), privateKey);
+	result->Set(context,Nan::New("publicKey").ToLocalChecked(), publicKey);
+	result->Set(context, Nan::New("privateKey").ToLocalChecked(), privateKey);
 	info.GetReturnValue().Set(result);
 }
 
@@ -71,7 +71,7 @@ NAN_METHOD(Sign) {
 	} else if ((Buffer::HasInstance(info[1])) && (Buffer::Length(info[1]->ToObject(context).ToLocalChecked()) == 64)) {
 		privateKey = (unsigned char*)Buffer::Data(info[1]->ToObject(context).ToLocalChecked());
 	} else if ((info[1]->IsObject()) && (!Buffer::HasInstance(info[1]))) {
-		Local<Value> privateKeyBuffer = info[1]->ToObject(context).ToLocalChecked()->Get(Nan::New<String>("privateKey").ToLocalChecked())->ToObject(context).ToLocalChecked();
+		Local<Value> privateKeyBuffer = info[1]->ToObject(context).ToLocalChecked()->Get(context, Nan::New<String>("privateKey").ToLocalChecked()).ToLocalChecked();
 		if (!Buffer::HasInstance(privateKeyBuffer)) {
 			return Nan::ThrowError("Sign requires (Buffer, {Buffer(32 or 64) | keyPair object})");
 		}
