@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "install": "node-gyp rebuild",
+    "install": "node-gyp build",
     "test": "mocha"
   },
   "keywords": [

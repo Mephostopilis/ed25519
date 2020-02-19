@@ -15,11 +15,14 @@ using namespace node;
  * returns: an Object with PublicKey and PrivateKey
  **/
 NAN_METHOD(MakeKeypair) {
+	Isolate *isolate = info.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
+
 	Nan::HandleScope scope;
-	if ((info.Length() < 1) || (!Buffer::HasInstance(info[0])) || (Buffer::Length(info[0]->ToObject()) != 32)) {
+	if ((info.Length() < 1) || (!Buffer::HasInstance(info[0])) || (Buffer::Length(info[0]->ToObject(context).ToLocalChecked()) != 32)) {
 		return Nan::ThrowError("MakeKeypair requires a 32 byte buffer");
 	}
-	const unsigned char* seed = (unsigned char*)Buffer::Data(info[0]->ToObject());
+	const unsigned char* seed = (unsigned char*)Buffer::Data(info[0]->ToObject(context).ToLocalChecked());
 
 	v8::Local<v8::Object> privateKey = Nan::NewBuffer(64).ToLocalChecked();
 
@@ -50,11 +53,14 @@ NAN_METHOD(Sign) {
 	Nan::HandleScope scope;
 	unsigned char* privateKey;
 
-	if ((info.Length() < 2) || (!Buffer::HasInstance(info[0]->ToObject()))) {
+	Isolate *isolate = info.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
+
+	if ((info.Length() < 2) || (!Buffer::HasInstance(info[0]->ToObject(context).ToLocalChecked()))) {
 		return Nan::ThrowError("Sign requires (Buffer, {Buffer(32 or 64) | keyPair object})");
 	}
-	if ((Buffer::HasInstance(info[1])) && (Buffer::Length(info[1]->ToObject()) == 32)) {
-		unsigned char* seed = (unsigned char*)Buffer::Data(info[1]->ToObject());
+	if ((Buffer::HasInstance(info[1])) && (Buffer::Length(info[1]->ToObject(context).ToLocalChecked()) == 32)) {
+		unsigned char* seed = (unsigned char*)Buffer::Data(info[1]->ToObject(context).ToLocalChecked());
 		unsigned char publicKeyData[32];
 		unsigned char privateKeyData[64];
 		for (int i = 0; i < 32; i++) {
@@ -62,10 +68,10 @@ NAN_METHOD(Sign) {
 		}
 		crypto_sign_keypair(publicKeyData, privateKeyData);
 		privateKey = privateKeyData;
-	} else if ((Buffer::HasInstance(info[1])) && (Buffer::Length(info[1]->ToObject()) == 64)) {
-		privateKey = (unsigned char*)Buffer::Data(info[1]->ToObject());
+	} else if ((Buffer::HasInstance(info[1])) && (Buffer::Length(info[1]->ToObject(context).ToLocalChecked()) == 64)) {
+		privateKey = (unsigned char*)Buffer::Data(info[1]->ToObject(context).ToLocalChecked());
 	} else if ((info[1]->IsObject()) && (!Buffer::HasInstance(info[1]))) {
-		Local<Value> privateKeyBuffer = info[1]->ToObject()->Get(Nan::New<String>("privateKey").ToLocalChecked())->ToObject();
+		Local<Value> privateKeyBuffer = info[1]->ToObject(context).ToLocalChecked()->Get(Nan::New<String>("privateKey").ToLocalChecked())->ToObject(context).ToLocalChecked();
 		if (!Buffer::HasInstance(privateKeyBuffer)) {
 			return Nan::ThrowError("Sign requires (Buffer, {Buffer(32 or 64) | keyPair object})");
 		}
@@ -73,7 +79,7 @@ NAN_METHOD(Sign) {
 	} else {
 		return Nan::ThrowError("Sign requires (Buffer, {Buffer(32 or 64) | keyPair object})");
 	}
-	Handle<Object> message = info[0]->ToObject();
+	Local<Object> message = info[0]->ToObject(context).ToLocalChecked();
 	const unsigned char* messageData = (unsigned char*)Buffer::Data(message);
 	size_t messageLen = Buffer::Length(message);
 	unsigned long long sigLen = 64 + messageLen;
@@ -98,13 +104,16 @@ NAN_METHOD(Sign) {
  * returns: boolean
  **/
 NAN_METHOD(Verify) {
-	if ((info.Length() < 3) || (!Buffer::HasInstance(info[0]->ToObject())) ||
-		(!Buffer::HasInstance(info[1]->ToObject())) || (!Buffer::HasInstance(info[2]->ToObject()))) {
+	Isolate *isolate = info.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
+
+	if ((info.Length() < 3) || (!Buffer::HasInstance(info[0]->ToObject(context).ToLocalChecked())) ||
+		(!Buffer::HasInstance(info[1]->ToObject(context).ToLocalChecked())) || (!Buffer::HasInstance(info[2]->ToObject(context).ToLocalChecked()))) {
 		return Nan::ThrowError("Verify requires (Buffer, Buffer(64), Buffer(32)");
 	}
-	Handle<Object> message = info[0]->ToObject();
-	Handle<Object> signature = info[1]->ToObject();
-	Handle<Object> publicKey = info[2]->ToObject();
+	Local<Object> message = info[0]->ToObject(context).ToLocalChecked();
+	Local<Object> signature = info[1]->ToObject(context).ToLocalChecked();
+	Local<Object> publicKey = info[2]->ToObject(context).ToLocalChecked();
 	if ((Buffer::Length(signature) != 64) || (Buffer::Length(publicKey) != 32)) {
 		return Nan::ThrowError("Verify requires (Buffer, Buffer(64), Buffer(32)");
 	}
@@ -117,7 +126,7 @@ NAN_METHOD(Verify) {
 }
 
 
-void InitModule(Handle<Object> exports) {
+void InitModule(Local<Object> exports) {
 	Nan::SetMethod(exports, "MakeKeypair", MakeKeypair);
 	Nan::SetMethod(exports, "Sign", Sign);
 	Nan::SetMethod(exports, "Verify", Verify);
