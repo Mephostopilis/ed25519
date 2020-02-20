@@ -15,7 +15,7 @@
     "test": "mocha"
   },
   "keywords": [
-    "pocket"
+    "pocket",
     "Ed25519",
     "elliptic",
     "curve",
