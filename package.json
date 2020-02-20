@@ -1,10 +1,13 @@
 {
-  "name": "ed25519",
-  "version": "0.0.4",
-  "description": "An Ed25519 implementation for node.js",
+  "name": "@pokt-network/ed25519",
+  "version": "0.0.1",
+  "description": "Pocket Network fork of the dazoe/ed25519 library with support for Node 12.15",
   "dependencies": {
     "bindings": "^1.2.1",
     "nan": "^2.0.9"
+  },
+  "engine": {
+    "node": ">=10.19.0 <=12.15.0" 
   },
   "main": "index.js",
   "scripts": {
@@ -12,6 +15,7 @@
     "test": "mocha"
   },
   "keywords": [
+    "pocket"
     "Ed25519",
     "elliptic",
     "curve",
@@ -20,9 +24,31 @@
     "EdDSA"
   ],
   "author": "Dave Akers",
+  "authors": [
+    {
+      "name": "Pabel Nunez Landestoy",
+      "email": "pabel@pokt.network",
+      "homepage": "https://github.com/pabelnl"
+    },
+    {
+      "name": "Luis C. de León",
+      "email": "luis@pokt.network",
+      "homepage": "https://github.com/luyzdeleon"
+    },
+    {
+      "name": "Wilson Garcia",
+      "email": "wilson@pokt.network",
+      "homepage": "https://github.com/wgarcia4190"
+    },
+    {
+      "name": "Alex Firmani",
+      "email": "alex@pokt.network",
+      "homepage": "https://github.com/nymd"
+    }
+  ],
   "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dazoe/ed25519.git"
+    "url": "https://github.com/pokt-network/ed25519.git"
   }
 }
