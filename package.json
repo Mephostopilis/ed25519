@@ -1,10 +1,10 @@
 {
-  "name": "@pokt-network/ed25519",
-  "version": "0.0.1",
-  "description": "Pocket Network fork of the dazoe/ed25519 library with support for Node 12.15",
+  "name": "csac-ed25519",
+  "version": "0.0.3",
+  "description": "Mephostopilis fork Pocket Network/Pocket Network fork of the dazoe/ed25519 library with support for Node 12.15",
   "dependencies": {
-    "bindings": "^1.2.1",
-    "nan": "^2.0.9"
+    "bindings": "^1.5.0",
+    "nan": "^2.14.0"
   },
   "engine": {
     "node": ">=10.19.0 <=12.15.0"
@@ -44,11 +44,16 @@
       "name": "Alex Firmani",
       "email": "alex@pokt.network",
       "homepage": "https://github.com/nymd"
+    },
+    {
+      "name": "Mephostopilis",
+      "email": "mephostopilis@gmail.com",
+      "homepage": "https://github.com/mephostopilis"
     }
   ],
   "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pokt-network/ed25519.git"
+    "url": "https://github.com/Mephostopilis/ed25519.git"
   }
 }

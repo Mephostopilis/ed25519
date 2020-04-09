@@ -1,14 +1,17 @@
-# ed25519
+# csac-ed25519
 A native implementation of Ed25519(http://ed25519.cr.yp.to/) for node.js
 
 ## Installation
-npm install ed25519
+npm install csac-ed25519
 
 ## Usage
 For usage details see the example.js file.
 
 ## License
 Copyright (c) 2013, Dave Akers
+
+Copyright (c) 2020, Mephostopilis
+
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
